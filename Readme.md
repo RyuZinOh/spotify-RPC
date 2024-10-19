@@ -1,7 +1,3 @@
-Here’s a refined version of your GitHub README, with a clearer structure, improved grammar, and more detailed instructions:
-
----
-
 # Spot That
 
 ## Project Overview
