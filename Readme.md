@@ -12,8 +12,8 @@ Spot That is a simple web application that integrates with Spotify to display cu
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/yourusername/spot-that.git
-   cd spot-that
+   git clone https://github.com/RyuZinOh/spotify-RPC
+   cd "repo name"
    ```
 
 2. **Create a Virtual Environment (Optional)**
