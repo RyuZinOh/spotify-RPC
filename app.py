@@ -4,6 +4,7 @@ import requests
 import os
 from dotenv import load_dotenv
 from datetime import datetime
+from keep_alive import keep_alive
 
 load_dotenv()
 
@@ -109,4 +110,7 @@ def search_user():
     return render_template('search_results.html', users=users)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
+
+
+keep_alive()
