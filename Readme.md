@@ -45,6 +45,12 @@ Once the application is running, you can access it in your browser at `http://lo
 - If you choose to use the global deployed version of this project, please note that your Spotify credentials may be stored on my cloud database. However, this may lead to unauthorized requests until I manually verify your access in my Spotify developer dashboard.
 - Keep in mind that this is a non-production site with a limit of 25 users for testing purposes. 
 
+
+### I want to add
+1. a searching feature to search all the user and see their status
+2. more refined version of bad request  as a error handler
+
+u can fork this and make adjustment, and we can merge the project until its completed  
+
 Thank you for your understanding!
 
----
