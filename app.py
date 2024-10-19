@@ -102,13 +102,6 @@ def logout():
     session.clear()
     return redirect(url_for('index'))
 
-
-@app.route('/search_user', methods=['GET'])
-def search_user():
-    query = request.args.get('query')
-    users = list(mongo.db.she_knows.find({"display_name": {"$regex": query, "$options": "i"}}))  # Case-insensitive search
-    return render_template('search_results.html', users=users)
-
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
 
