@@ -68,7 +68,7 @@ def callback():
         mongo.db.she_knows.update_one({"spotify_id": spotify_id}, {"$set": {"email": user_email, "access_token": access_token, "refresh_token": refresh_token, "profile_picture": profile_picture, "display_name": display_name}})
 
     session['spotify_id'] = spotify_id
-    session['username'] = display_name  # Store username for later use
+    session['username'] = display_name
     return redirect(url_for('currently_playing', username=display_name))
 
 @app.route('/currently_playing/<username>')
@@ -82,18 +82,43 @@ def currently_playing(username):
         access_token = current_user['access_token']
         headers = {'Authorization': f'Bearer {access_token}'}
         response = requests.get('https://api.spotify.com/v1/me/player/currently-playing', headers=headers)
-        track_info = response.json()
-        
-        for user in users:
-            if user['display_name'] == username:
-                user['is_playing'] = track_info.get('is_playing', False)
-                user['track_name'] = track_info['item']['name'] if 'item' in track_info else None
-                user['artist_name'] = track_info['item']['artists'][0]['name'] if 'item' in track_info else None
-                user['track_thumbnail'] = track_info['item']['album']['images'][0]['url'] if 'item' in track_info else None
-                user['timestamp'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                break
 
-        return render_template('currently_playing.html', users=users, current_user=current_user)
+        if response.status_code == 200:
+            try:
+                track_info = response.json()
+
+                for user in users:
+                    if user['display_name'] == username:
+                        user['is_playing'] = track_info.get('is_playing', False)
+                        user['track_name'] = track_info['item']['name'] if 'item' in track_info else None
+                        user['artist_name'] = track_info['item']['artists'][0]['name'] if 'item' in track_info else None
+                        user['track_thumbnail'] = track_info['item']['album']['images'][0]['url'] if 'item' in track_info else None
+                        user['timestamp'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                        break
+
+                return render_template('currently_playing.html', users=users, current_user=current_user)
+
+            except ValueError as e:
+                print(f"JSON decoding error: {e}")
+                print(f"Response content: {response.text}")
+                return "Failed to decode JSON from Spotify API."
+        
+        elif response.status_code == 204:
+            for user in users:
+                if user['display_name'] == username:
+                    user['is_playing'] = False
+                    user['track_name'] = None
+                    user['artist_name'] = None
+                    user['track_thumbnail'] = None
+                    user['timestamp'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    break
+
+            return render_template('currently_playing.html', users=users, current_user=current_user)
+        
+        else:
+            print(f"Error: Received status code {response.status_code}")
+            print(f"Response content: {response.text}")
+            return f"Error fetching data from Spotify: {response.status_code}."
     
     return redirect(url_for('login'))
 
@@ -104,6 +129,5 @@ def logout():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
-
 
 keep_alive()
