@@ -1,0 +1,4 @@
+Flask
+Flask-PyMongo
+python-dotenv
+requests

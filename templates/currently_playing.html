@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Currently Playing</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+
+    <div class="container">
+        
+      <div class="profile-pic-container">
+        <img
+          src="{{ current_user['profile_picture'] }}"
+          alt="Profile Picture"
+          style="width: 50px"
+        />
+        <div class="profile-drawer">
+          <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+      </div>
+      <h1>Currently Playing</h1>
+      <div class="track-info">
+        {% for user in users %}
+        <img src="{{ user.track_thumbnail }}" alt="Track Thumbnail" />
+        <div class="track-details">
+          <strong>{{ user.display_name }}</strong> ({{ user.timestamp }})<br />
+          {% if user.get('is_playing') %}
+          <strong>Track:</strong> {{ user.track_name }}<br />
+          <strong>Artist:</strong> {{ user.artist_name }} {% else %}
+          <strong>Status:</strong> Offline {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      <br />
+      <a href="{{ url_for('index') }}">Back to Home</a>
+    </div>
+  </body>
+</html>
